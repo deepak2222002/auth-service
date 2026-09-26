@@ -6,7 +6,7 @@ RUN rm -rf webapps/*
 
 COPY target/*.war webapps/ROOT.war
 
-COPY src/main/resources/jobportal-ssl.p12 conf/auth-service.p12
+COPY src/main/resources/auth-service.p12 conf/auth-service.p12
 
 EXPOSE 8080
 EXPOSE 8443
