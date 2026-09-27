@@ -38,6 +38,7 @@ pipeline {
                         --network backend_default \
                         --restart unless-stopped \
                         -p 8091:8443 \
+                        -e CORS_ALLOWED_ORIGINS=https://192.168.31.184:8090 \
                         -e DB_URL="jdbc:sqlserver://sqlserver:1433;databaseName=jobportal;trustServerCertificate=true" \
                         -e DB_USERNAME="$DB_USERNAME" \
                         -e DB_PASSWORD="$DB_PASSWORD" \

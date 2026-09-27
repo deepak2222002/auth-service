@@ -18,264 +18,170 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.beans.factory.annotation.Value;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigMasters {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPointObject;
+	@Value("${app.cors.allowed-origins}")
+	private String allowedOrigins;
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilterObject;
+	@Autowired
+	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPointObject;
 
-    @Autowired
-    private JwtAccessDeniedHandler jwtAccessDeniedHandlerObject;
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilterObject;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Autowired
+	private JwtAccessDeniedHandler jwtAccessDeniedHandlerObject;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomeUserDetailService();
-    }
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new CustomeUserDetailService();
+	}
 
-        DaoAuthenticationProvider daoAuthenticationProvider =
-                new DaoAuthenticationProvider();
+	@Bean
+	public DaoAuthenticationProvider daoAuthenticationProvider() {
 
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 
-        return daoAuthenticationProvider;
-    }
+		daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+		daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration builder) throws Exception {
+		return daoAuthenticationProvider;
+	}
 
-        return builder.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+		return builder.getAuthenticationManager();
+	}
 
-        http
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-            /* ================= CORS ================= */
+		http
 
-            .cors(cors -> cors.configurationSource(request -> {
+				/* ================= CORS ================= */
 
-                CorsConfiguration config = new CorsConfiguration();
+				/* ================= CORS ================= */
 
-                config.setAllowedOrigins(List.of(
-                        "http://localhost:3000",
-                        "https://localhost:8090"
-                ));
+				.cors(cors -> cors.configurationSource(request -> {
 
-                config.setAllowedMethods(List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "DELETE",
-                        "OPTIONS"
-                ));
+					CorsConfiguration config = new CorsConfiguration();
 
-                config.setAllowedHeaders(List.of("*"));
-                config.setAllowCredentials(true);
+					config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
 
-                return config;
-            }))
+					config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-            /* ================= HEADERS ================= */
+					config.setAllowedHeaders(List.of("*"));
+					config.setAllowCredentials(true);
 
-            .headers(headers ->
-                    headers.frameOptions(frame -> frame.disable())
-            )
+					return config;
+				}))
 
-            /* ================= CSRF ================= */
+				/* ================= HEADERS ================= */
 
-            .csrf(csrf -> csrf.disable())
+				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 
-            /* ================= AUTHORIZATION ================= */
+				/* ================= CSRF ================= */
 
-            .authorizeHttpRequests(auth -> auth
+				.csrf(csrf -> csrf.disable())
 
-                /* ---------- PUBLIC PAGES & STATIC ---------- */
+				/* ================= AUTHORIZATION ================= */
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/loginpage"),
-                        new AntPathRequestMatcher("/traininglogin"),
-                        new AntPathRequestMatcher("/usertraininglogin"),
-                        new AntPathRequestMatcher("/home"),
-                        new AntPathRequestMatcher("/unauthorizeaccess"),
-                        new AntPathRequestMatcher("/favicon.ico")
-                )
-                .permitAll()
+				.authorizeHttpRequests(auth -> auth
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/js/**"),
-                        new AntPathRequestMatcher("/css/**"),
-                        new AntPathRequestMatcher("/images/**"),
-                        new AntPathRequestMatcher("/image/**"),
-                        new AntPathRequestMatcher("/uploadImages/**"),
-                        new AntPathRequestMatcher("/trainingResouces/**")
-                )
-                .permitAll()
+						/* ---------- PUBLIC PAGES & STATIC ---------- */
 
-                /* ---------- PUBLIC CONTROLLERS ---------- */
+						.requestMatchers(new AntPathRequestMatcher("/loginpage"),
+								new AntPathRequestMatcher("/traininglogin"),
+								new AntPathRequestMatcher("/usertraininglogin"), new AntPathRequestMatcher("/home"),
+								new AntPathRequestMatcher("/unauthorizeaccess"),
+								new AntPathRequestMatcher("/favicon.ico"))
+						.permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/auth/**"),
-                        new AntPathRequestMatcher("/Controllers/image/**"),
-                        new AntPathRequestMatcher("/Controllers/pd/image/**"),
-                        new AntPathRequestMatcher("/Controllers/excel/images/**"),
-                        new AntPathRequestMatcher("/Controllers/sign-status/**"),
-                        new AntPathRequestMatcher("/Controllers/save/**"),
-                        new AntPathRequestMatcher("/Controllers/getAuthorities"),
-                        new AntPathRequestMatcher("/Controllers/MachineCheckSheetFieldImage/**"),
-                        new AntPathRequestMatcher("/Controllers/rqcuploadImages/**"),
-                        new AntPathRequestMatcher("/api/zpl/**")
-                )
-                .permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/css/**"),
+								new AntPathRequestMatcher("/images/**"), new AntPathRequestMatcher("/image/**"),
+								new AntPathRequestMatcher("/uploadImages/**"),
+								new AntPathRequestMatcher("/trainingResouces/**"))
+						.permitAll()
 
-                /* ---------- PUBLIC MODULES ---------- */
+						/* ---------- PUBLIC CONTROLLERS ---------- */
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/TrainingAndTest/**"),
-                        new AntPathRequestMatcher("/TestAndTraining/**"),
-                        new AntPathRequestMatcher("/trainingResouces/**"),
-                        new AntPathRequestMatcher("/excelMasterSheet/**"),
-                        new AntPathRequestMatcher("/projectLoginpage/**"),
-                        new AntPathRequestMatcher("/projectManagementLoginpage/**"),
-                        new AntPathRequestMatcher("/projectManagementDashboard/**"),
-                        new AntPathRequestMatcher("/projectModuleReports/**")
-                )
-                .permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/auth/**"),
+								new AntPathRequestMatcher("/Controllers/image/**"),
+								new AntPathRequestMatcher("/Controllers/pd/image/**"),
+								new AntPathRequestMatcher("/Controllers/excel/images/**"),
+								new AntPathRequestMatcher("/Controllers/sign-status/**"),
+								new AntPathRequestMatcher("/Controllers/save/**"),
+								new AntPathRequestMatcher("/Controllers/getAuthorities"),
+								new AntPathRequestMatcher("/Controllers/MachineCheckSheetFieldImage/**"),
+								new AntPathRequestMatcher("/Controllers/rqcuploadImages/**"),
+								new AntPathRequestMatcher("/api/zpl/**"))
+						.permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/TrainingDashboard/**")
-                )
-                .permitAll()
+						/* ---------- PUBLIC MODULES ---------- */
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/ExamTraining/**")
-                )
-                .permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/TrainingAndTest/**"),
+								new AntPathRequestMatcher("/TestAndTraining/**"),
+								new AntPathRequestMatcher("/trainingResouces/**"),
+								new AntPathRequestMatcher("/excelMasterSheet/**"),
+								new AntPathRequestMatcher("/projectLoginpage/**"),
+								new AntPathRequestMatcher("/projectManagementLoginpage/**"),
+								new AntPathRequestMatcher("/projectManagementDashboard/**"),
+								new AntPathRequestMatcher("/projectModuleReports/**"))
+						.permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/Controllers/**")
-                )
-                .permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/TrainingDashboard/**")).permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/kafka/**")
-                )
-                .permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/ExamTraining/**")).permitAll()
 
-                /* ---------- ROLE BASED APIs ---------- */
+						.requestMatchers(new AntPathRequestMatcher("/Controllers/**")).permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher("/dashboard/**")
-                )
-                .hasRole("SUPER ADMIN")
+						.requestMatchers(new AntPathRequestMatcher("/kafka/**")).permitAll()
 
-                .requestMatchers(
-                        new AntPathRequestMatcher(
-                                "/masters/dashboard",
-                                HttpMethod.GET.name()
-                        )
-                )
-                .hasAnyRole(
-                        "SUPER ADMIN",
-                        "RQC",
-                        "Process Engineering",
-                        "Engineering",
-                        "Maintenance",
-                        "PPC",
-                        "Quality",
-                        "HR",
-                        "Store",
-                        "Operations",
-                        "Production",
-                        "Plant Head",
-                        "Purchase"
-                )
+						/* ---------- ROLE BASED APIs ---------- */
 
-                .requestMatchers(
-                        new AntPathRequestMatcher(
-                                "/receivequalitychecking/dashboard",
-                                HttpMethod.GET.name()
-                        )
-                )
-                .hasAnyRole(
-                        "SUPER ADMIN",
-                        "RQC",
-                        "Engineering",
-                        "Process Engineering",
-                        "Operations",
-                        "Plant Head"
-                )
+						.requestMatchers(new AntPathRequestMatcher("/dashboard/**")).hasRole("SUPER ADMIN")
 
-                .requestMatchers(
-                        new AntPathRequestMatcher(
-                                "/reports/dashboard",
-                                HttpMethod.GET.name()
-                        )
-                )
-                .hasAnyRole(
-                        "SUPER ADMIN",
-                        "Production",
-                        "Quality",
-                        "PPC",
-                        "RQC",
-                        "Maintenance",
-                        "HR",
-                        "Store",
-                        "Engineering",
-                        "Process Engineering",
-                        "Operations",
-                        "Plant Head",
-                        "Purchase"
-                )
+						.requestMatchers(new AntPathRequestMatcher("/masters/dashboard", HttpMethod.GET.name()))
+						.hasAnyRole("SUPER ADMIN", "RQC", "Process Engineering", "Engineering", "Maintenance", "PPC",
+								"Quality", "HR", "Store", "Operations", "Production", "Plant Head", "Purchase")
 
-                /* ---------- DEFAULT ---------- */
+						.requestMatchers(
+								new AntPathRequestMatcher("/receivequalitychecking/dashboard", HttpMethod.GET.name()))
+						.hasAnyRole("SUPER ADMIN", "RQC", "Engineering", "Process Engineering", "Operations",
+								"Plant Head")
 
-                .anyRequest()
-                .permitAll()
-            )
+						.requestMatchers(new AntPathRequestMatcher("/reports/dashboard", HttpMethod.GET.name()))
+						.hasAnyRole("SUPER ADMIN", "Production", "Quality", "PPC", "RQC", "Maintenance", "HR", "Store",
+								"Engineering", "Process Engineering", "Operations", "Plant Head", "Purchase")
 
-            /* ================= EXCEPTION HANDLING ================= */
+						/* ---------- DEFAULT ---------- */
 
-            .exceptionHandling(ex ->
-                    ex.authenticationEntryPoint(
-                            jwtAuthenticationEntryPointObject
-                    )
-                    .accessDeniedHandler(
-                            jwtAccessDeniedHandlerObject
-                    )
-            )
+						.anyRequest().permitAll())
 
-            /* ================= SESSION ================= */
+				/* ================= EXCEPTION HANDLING ================= */
 
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(
-                            SessionCreationPolicy.STATELESS
-                    )
-            );
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPointObject)
+						.accessDeniedHandler(jwtAccessDeniedHandlerObject))
 
-        /* ================= JWT FILTER ================= */
+				/* ================= SESSION ================= */
 
-        http.addFilterAfter(
-                jwtAuthenticationFilterObject,
-                UsernamePasswordAuthenticationFilter.class
-        );
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        return http.build();
-    }
+		/* ================= JWT FILTER ================= */
+
+		http.addFilterAfter(jwtAuthenticationFilterObject, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
 }
