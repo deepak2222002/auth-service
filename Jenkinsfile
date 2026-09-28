@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'deepak2222002/auth-service:1.0'
+    }
+
     stages {
 
         stage('Checkout') {
@@ -10,7 +14,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build JAR') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -18,36 +22,67 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t auth-service .'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Login & Push') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'db-remoteuser',
-                    usernameVariable: 'DB_USERNAME',
-                    passwordVariable: 'DB_PASSWORD'
-                )]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
                     sh '''
-                        docker stop auth-service || true
-                        docker rm auth-service || true
+                        echo "$DOCKER_PASSWORD" | docker login \
+                            -u "$DOCKER_USERNAME" \
+                            --password-stdin
 
-                        docker run -d \
-                        --name auth-service \
-                        --network backend_default \
-                        --restart unless-stopped \
-                        -p 8091:8443 \
-                        -e CORS_ALLOWED_ORIGINS=https://192.168.31.184:8090 \
-                        -e DB_URL="jdbc:sqlserver://sqlserver:1433;databaseName=jobportal;trustServerCertificate=true" \
-                        -e DB_USERNAME="$DB_USERNAME" \
-                        -e DB_PASSWORD="$DB_PASSWORD" \
-                        -e KAFKA_BOOTSTRAP_SERVERS="kafka:9092" \
-                        auth-service
+                        docker push "$DOCKER_IMAGE"
+
+                        docker logout
                     '''
                 }
             }
         }
 
+        stage('Create DB Secret') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'db-remoteuser',
+                        usernameVariable: 'DB_USERNAME',
+                        passwordVariable: 'DB_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        kubectl create secret generic db-credentials \
+                          --from-literal=DB_USERNAME="$DB_USERNAME" \
+                          --from-literal=DB_PASSWORD="$DB_PASSWORD" \
+                          --dry-run=client -o yaml | kubectl apply -f -
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    kubectl apply -f k8s/auth-service.yaml
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    kubectl rollout status deployment/auth-service
+                    kubectl get pods
+                    kubectl get service auth-service
+                '''
+            }
+        }
     }
 }
