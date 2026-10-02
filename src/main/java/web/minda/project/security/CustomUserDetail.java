@@ -22,7 +22,7 @@ public class CustomUserDetail implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		try {
-			String roleName = loginMaster.getDepartment().getDepartmentName();		
+			String roleName = loginMaster.getRole().getRoleName();		
 			SimpleGrantedAuthority simpleGrantedAuthorityObject = new SimpleGrantedAuthority("ROLE_" + roleName);
 			return List.of(simpleGrantedAuthorityObject);
 		} catch (Exception e) {
@@ -63,8 +63,7 @@ public class CustomUserDetail implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
+	    return loginMaster.getIsEnabled();
 	}
 
 }

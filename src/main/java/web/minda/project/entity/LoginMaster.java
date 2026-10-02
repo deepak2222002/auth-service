@@ -55,9 +55,9 @@ public class LoginMaster {
 
 	@Column(name = "password")
 	private String password;
-
-	@ManyToOne
-	private RoleMaster role;
+	
+	@Column(name = "is_enabled")
+	private Boolean isEnabled;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -69,10 +69,7 @@ public class LoginMaster {
 	private String reportAuthorization;
 
 	@ManyToOne
-	private DepartmentMaster department;
-
-	@ManyToOne
-	private PlantMaster plant;
+	private RoleMaster role;
 
 	public Long getLoginId() {
 		return loginId;
@@ -186,6 +183,14 @@ public class LoginMaster {
 		this.password = password;
 	}
 
+	public Boolean getIsEnabled() {
+		return isEnabled;
+	}
+
+	public void setIsEnabled(Boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
 	public RoleMaster getRole() {
 		return role;
 	}
@@ -218,26 +223,10 @@ public class LoginMaster {
 		this.reportAuthorization = reportAuthorization;
 	}
 
-	public DepartmentMaster getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(DepartmentMaster department) {
-		this.department = department;
-	}
-
-	public PlantMaster getPlant() {
-		return plant;
-	}
-
-	public void setPlant(PlantMaster plant) {
-		this.plant = plant;
-	}
-
 	public LoginMaster(Long loginId, String title, String designation, String firstName, String lastName, String email,
 			String employeeId, String contact, String dob, String dateOfJoining, String dateOfLeaving, String status,
-			String dateTime, String password, RoleMaster role, String createdBy, String authorization,
-			String reportAuthorization, DepartmentMaster department, PlantMaster plant) {
+			String dateTime, String password, Boolean isEnabled, RoleMaster role, String createdBy,
+			String authorization, String reportAuthorization) {
 		super();
 		this.loginId = loginId;
 		this.title = title;
@@ -253,12 +242,11 @@ public class LoginMaster {
 		this.status = status;
 		this.dateTime = dateTime;
 		this.password = password;
+		this.isEnabled = isEnabled;
 		this.role = role;
 		this.createdBy = createdBy;
 		this.authorization = authorization;
 		this.reportAuthorization = reportAuthorization;
-		this.department = department;
-		this.plant = plant;
 	}
 
 	public LoginMaster() {
@@ -266,6 +254,6 @@ public class LoginMaster {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 
+	
 }

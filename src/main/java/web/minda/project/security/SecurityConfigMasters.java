@@ -137,6 +137,7 @@ public class SecurityConfigMasters {
 								new AntPathRequestMatcher("/projectLoginpage/**"),
 								new AntPathRequestMatcher("/projectManagementLoginpage/**"),
 								new AntPathRequestMatcher("/projectManagementDashboard/**"),
+								new AntPathRequestMatcher("/projectEmployeeDashboard/**"),
 								new AntPathRequestMatcher("/projectModuleReports/**"))
 						.permitAll()
 

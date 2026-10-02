@@ -34,106 +34,10 @@ public class WebPageController {
 		return "forward:/projectLoginpage/index.html";
 	}
 
-	@RequestMapping(value = { "/moduleDashboard" })
+	@RequestMapping(value = { "/employeeDashboard" })
 	public String forwardToDashboard() {
-		return "forward:/projectModuleDashboard/index.html";
+		return "forward:/projectEmployeeDashboard/index.html";
 	}
-
-	@RequestMapping(value = { "/masterDashboard" })
-	public String forwardToMasterDashboard() {
-		return "forward:/projectModuleMasters/index.html";
-	}
-
-	@RequestMapping(value = { "/masterDashboard/**" })
-	public String forwardToMasterDashboardAll() {
-		return "forward:/projectModuleMasters/index.html";
-	}
-
-	@RequestMapping(value = { "/reportDashboard" })
-	public String forwardToReportDashboard() {
-		return "forward:/projectModuleReports/index.html";
-	}
-
-	@RequestMapping(value = { "/reportDashboard/**" })
-	public String reportDashboardAll() {
-		return "forward:/projectModuleReports/index.html";
-	}
-
-	@RequestMapping(value = { "/maintenanceDashboard" })
-	public String forwardToMaintenanceDashboard() {
-		return "forward:/projectModuleMaintenance/index.html";
-	}
-
-	@RequestMapping(value = { "/maintenanceDashboard/**" })
-	public String forwardToMaintenanceDashboardAll() {
-		return "forward:/projectModuleMaintenance/index.html";
-	}
-	
-	
-	@RequestMapping("/qualityIncoming")
-    public String forwardToIncoming() {
-        return "forward:/projectIncomingModule/index.html";
-    }
-    
-    
-    @RequestMapping("/quality")
-    public String forwardToquality() {
-        return "forward:/projectIncomingModule/index.html";
-    }
-    
-    @RequestMapping("/quality/**")
-    public String forwardToqualityAll() {
-        return "forward:/projectIncomingModule/index.html";
-    }
-    
-    
-    @RequestMapping("/quarantineDashboard")
-    public String quarantineWindow() {
-        return "forward:/projectQuarantineModule/index.html";
-    }
-    
-    @RequestMapping("/quarantineDashboard/*")
-    public String quarantineAllWindow() {
-        return "forward:/projectQuarantineModule/index.html";
-    }
-    
-    @RequestMapping("/reprint")
-    public String reprintWindow() {
-        return "forward:/projectIncomingModule/index.html";
-    }
-    
-    @RequestMapping("/reprint/**")
-    public String reprintAllString() {
-        return "forward:/projectIncomingModule/index.html";
-    }
-    
-    @RequestMapping("/quarantineDashboard/reprint/*")
-    public String quarantineAllWindowreprint() {
-        return "forward:/projectQuarantineModule/index.html";
-    }
-    
-    
-    
-    @RequestMapping("/store")
-    public String forwardTostore() {
-        return "forward:/projectMainStoreModule/index.html";
-    }
-    
-    @RequestMapping("/store/**")
-    public String forwardTostoreAll() {
-        return "forward:/projectMainStoreModule/index.html";
-    }
-    
-    
-    @RequestMapping("/productionDashboard")
-    public String forwardToProductionDashboard() {
-        return "forward:/projectModuleProduction/index.html";
-    }
-    
-    @RequestMapping("/productionDashboard/**")
-    public String forwardToProductionDashboardAll() {
-        return "forward:/projectModuleProduction/index.html";
-    }
     
 
 }

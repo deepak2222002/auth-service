@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/projectEmployeeDashboard/static/css/main.fd2ae9db.css",
+    "main.js": "/projectEmployeeDashboard/static/js/main.1aa1e065.js",
+    "static/js/453.930d3667.chunk.js": "/projectEmployeeDashboard/static/js/453.930d3667.chunk.js",
+    "static/media/bootstrap-icons.woff?": "/projectEmployeeDashboard/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
+    "static/media/bootstrap-icons.woff2?": "/projectEmployeeDashboard/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
+    "static/media/copyrightImage.png": "/projectEmployeeDashboard/static/media/copyrightImage.3a44ff0f98976fa0ad62.png",
+    "static/media/background.jpg": "/projectEmployeeDashboard/static/media/background.97b49da8922ccac69f4a.jpg",
+    "static/media/default2.png": "/projectEmployeeDashboard/static/media/default2.4dbde45bfd7886de7c25.png",
+    "static/media/woco.png": "/projectEmployeeDashboard/static/media/woco.77f2e99fa4f53af3f599.png",
+    "index.html": "/projectEmployeeDashboard/index.html",
+    "main.fd2ae9db.css.map": "/projectEmployeeDashboard/static/css/main.fd2ae9db.css.map",
+    "main.1aa1e065.js.map": "/projectEmployeeDashboard/static/js/main.1aa1e065.js.map",
+    "453.930d3667.chunk.js.map": "/projectEmployeeDashboard/static/js/453.930d3667.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd2ae9db.css",
+    "static/js/main.1aa1e065.js"
+  ]
+}

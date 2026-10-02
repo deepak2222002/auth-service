@@ -139,9 +139,9 @@ public class AuthController {
 		String token = this.jwtHelper.generateToken(userDetails);
 
 		// Fetch additional user info
-		request.setRole(this.loginMasterRepositoryObject.getRoleById(request.getEmployeeId()));
-		request.setDepartment(this.loginMasterRepositoryObject.getDepartmentById(request.getEmployeeId()));
-		request.setName(this.loginMasterRepositoryObject.getEmployeeName(request.getEmployeeId()));
+//		request.setRole(this.loginMasterRepositoryObject.getRoleById(request.getEmployeeId()));
+//		request.setDepartment(this.loginMasterRepositoryObject.getDepartmentById(request.getEmployeeId()));
+//		request.setName(this.loginMasterRepositoryObject.getEmployeeName(request.getEmployeeId()));
 
 		// 🔹 Create secure HttpOnly cookie
 		ResponseCookie jwtCookie = ResponseCookie.from("JWT_TOKEN", token).httpOnly(true) // cannot be accessed by JS
